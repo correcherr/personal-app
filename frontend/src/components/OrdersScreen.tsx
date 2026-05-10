@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import type { Order, Article, OrderItem } from "../types";
 import { API, capitalizeFirst, authFetch, formatPrice, triggerRefresh } from "../utils/helpers";
 import { useDevice } from "../hooks/useMediaQuery";
-import { useAuth, useTranslation } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: number) => void }) {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([])
   const [articles, setArticles] = useState<Article[]>([])
   const { isDesktop } = useDevice()
@@ -28,10 +27,10 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   
   // Form for new item/article
   const [newItemName, setNewItemName] = useState("")
-  const [newItemCategory, setNewItemCategory] = useState(user?.product_type || "")
+  const [newItemCategory] = useState(user?.product_type || "")
   const [newItemBuyPrice, setNewItemBuyPrice] = useState("")
   const [newItemRecPrice, setNewItemRecPrice] = useState("")
-  const [newItemQuantity, setNewItemQuantity] = useState("1")
+  const [newItemQuantity] = useState("1")
   const [newItemFile, setNewItemFile] = useState<File | null>(null)
   const [newItemSellPrice, setNewItemSellPrice] = useState("") 
   
@@ -39,14 +38,9 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
   const [selectedItemSales, setSelectedItemSales] = useState<number | null>(null)
 
-  const [editBuyPriceModalOpen, setEditBuyPriceModalOpen] = useState(false)
-  const [editBuyPrice, setEditBuyPrice] = useState("")
-  const [activeItemId, _setActiveItemId] = useState<number | null>(null)
-  
   // Delete confirm states
   const [deleteOrderTarget, setDeleteOrderTarget] = useState<number | null>(null)
   const [deleteItemTarget, setDeleteItemTarget] = useState<number | null>(null)
-  const [animatingDeleteId, setAnimatingDeleteId] = useState<number | null>(null)
 
   useEffect(() => {
     if (!isDesktop) {
@@ -126,7 +120,6 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     setNewItemBuyPrice("")
     setNewItemRecPrice("")
     setNewItemSellPrice("")
-    setNewItemQuantity("1")
     setNewItemFile(null)
   }
 
@@ -179,7 +172,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     } catch {}
   }
 
-  const handleUpdateUnitSalePrice = async (saleId: number, priceStr: string, _orderId: number) => {
+  const handleUpdateUnitSalePrice = async (saleId: number, priceStr: string) => {
     const sell_price = priceStr.trim() === "" ? null : parseFloat(priceStr.replace(',', '.'))
     if (sell_price !== null && isNaN(sell_price)) return
 
@@ -225,7 +218,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     )
   }
 
-  const UnitSaleInput = ({ sale, buyPrice, orderId }: { sale: any, buyPrice: number, orderId: number }) => {
+  const UnitSaleInput = ({ sale, buyPrice }: { sale: any, buyPrice: number }) => {
     const [val, setVal] = useState(sale.sell_price != null ? sale.sell_price.toString() : "")
     const currentPrice = val.trim() === "" ? null : parseFloat(val.replace(',', '.'))
     const profit = currentPrice != null ? currentPrice - buyPrice : null

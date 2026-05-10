@@ -66,25 +66,7 @@ def run_migrations():
             except Exception:
                 pass 
 
-def fix_old_sales():
-    db = SessionLocal()
-    try:
-        sales_to_fix = db.query(OrderItemSale).filter(OrderItemSale.sold_at == None, OrderItemSale.sell_price != None).all()
-        for s in sales_to_fix:
-            item = db.query(OrderItem).filter(OrderItem.id == s.order_item_id).first()
-            if item:
-                order = db.query(Order).filter(Order.id == item.order_id).first()
-                if order and hasattr(order, 'date') and order.date:
-                    try:
-                        s.sold_at = datetime.strptime(str(order.date), "%Y-%m-%d")
-                    except:
-                        s.sold_at = datetime.utcnow()
-        db.commit()
-    except Exception as e:
-        print(f"Error fixing old sales: {e}")
-        db.rollback()
-    finally:
-        db.close()
+run_migrations()
 
 def seed_admin_and_assign_data():
     db = SessionLocal()
@@ -139,9 +121,7 @@ def seed_admin_and_assign_data():
     finally:
         db.close()
 
-run_migrations()
 seed_admin_and_assign_data()
-fix_old_sales()
 
 UPLOAD_DIR = "uploads"
 PROFILES_DIR = os.path.join(UPLOAD_DIR, "profiles")

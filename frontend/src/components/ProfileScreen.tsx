@@ -10,7 +10,6 @@ type SubTab = 'menu' | 'profile' | 'appearance' | 'stats' | 'data' | 'help';
 export function ProfileScreen() {
   const { isDesktop } = useDevice();
   const { user, logout, updateUser, isLoading: authLoading } = useAuth();
-  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [showSaved, setShowSaved] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
@@ -19,7 +18,7 @@ export function ProfileScreen() {
   const [currentSubTab, setCurrentSubTab] = useState<SubTab>('menu');
 
   // Stats & App info
-  const [stats, setStats] = useState<any>(null);
+  const [_stats, _setStats] = useState<any>(null);
   const [version, setVersion] = useState("1.0.0");
   const [showImportConfirm, setShowImportConfirm] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
