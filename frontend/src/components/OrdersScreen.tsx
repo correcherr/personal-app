@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import type { Order, Article, OrderItem } from "../types";
 import { API, capitalizeFirst, authFetch, formatPrice, triggerRefresh } from "../utils/helpers";
 import { useDevice } from "../hooks/useMediaQuery";
-import { useAuth } from "../context/AuthContext";
+import { useAuth, useTranslation } from "../context/AuthContext";
 
 export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: number) => void }) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([])
   const [articles, setArticles] = useState<Article[]>([])
   const { isDesktop } = useDevice()
@@ -24,7 +25,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   const [newOrderName, setNewOrderName] = useState("")
 
   const [addItemModalOpen, setAddItemModalOpen] = useState(false)
-  const [activeOrderId, _setActiveOrderId] = useState<number | null>(null)
+  const [activeOrderId, setActiveOrderId] = useState<number | null>(null)
   
   // Form for new item/article
   const [newItemName, setNewItemName] = useState("")
@@ -37,10 +38,11 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   
   // Article Detail State
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+  const [selectedItemSales, setSelectedItemSales] = useState<number | null>(null)
 
   const [editBuyPriceModalOpen, setEditBuyPriceModalOpen] = useState(false)
   const [editBuyPrice, setEditBuyPrice] = useState("")
-  const [activeItemId, _setActiveItemId] = useState<number | null>(null)
+  const [activeItemId, setActiveItemId] = useState<number | null>(null)
   
   // Delete confirm states
   const [deleteOrderTarget, setDeleteOrderTarget] = useState<number | null>(null)
@@ -244,6 +246,23 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
       })
       fetchOrders()
       triggerRefresh()
+    } catch {}
+  }
+
+  const handleUpdateBuyPriceSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!activeItemId) return
+    const buy_price = parseFloat(editBuyPrice.replace(',','.'))
+    if (isNaN(buy_price) || buy_price <= 0) return
+    try {
+      await authFetch(`${API}/api/orders/items/${activeItemId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ buy_price })
+      })
+      fetchOrders()
+      triggerRefresh()
+      setEditBuyPriceModalOpen(false)
     } catch {}
   }
 
@@ -468,7 +487,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         flexDirection: "column",
         gap: "8px"
       }}>
-        {item.sales.map((sale: any, idx: number) => {
+        {item.sales.map((sale: any) => {
           const isSold = sale.sell_price !== null;
           return (
             <div key={sale.id} style={{
@@ -489,7 +508,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                 flexShrink: 0
               }} />
               <div style={{ flex: 1 }}>
-                <UnitSaleInput sale={sale} buyPrice={item.buy_price} orderId={orderId} />
+                <UnitSaleInput sale={sale} buyPrice={item.buy_price} orderId={_orderId} />
               </div>
             </div>
           )
