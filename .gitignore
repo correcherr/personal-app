@@ -10,7 +10,7 @@
 .env.*
 !.env.example
 
-# Frontend (React/Vite)
+# Frontend (React/Vite/Node)
 frontend/node_modules/
 frontend/dist/
 frontend/build/
@@ -20,17 +20,23 @@ frontend/coverage/
 
 # Backend (Python/FastAPI)
 backend/__pycache__/
-backend/*.pyc
-backend/*.pyo
+__pycache__/
+*.pyc
+*.pyo
 backend/venv/
 backend/env/
+venv/
+env/
 backend/.pytest_cache/
 backend/alembic.ini
 
-# Bases de datos y archivos generados
+# Bases de datos y archivos generados (CRÍTICO: No subir datos de usuarios)
+*.db
+*.sqlite3
+*.db-journal
 backend/*.db
 backend/*.sqlite3
 
-# Archivos de usuario subidos
+# Archivos de usuario subidos (Imágenes de perfil, etc.)
 backend/uploads/*
 !backend/uploads/.keep

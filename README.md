@@ -1,30 +1,33 @@
-## 🎯 El Problema que Resuelve
+# 🚀 HUSTLE Financial Analytics Platform
 
-Llevar el control del inventario y los márgenes de beneficio suele requerir complejas hojas de cálculo de Excel o herramientas de gestión genéricas que carecen de atractivo visual. FlipManager soluciona esto ofreciendo:
-
-1. **Claridad Visual:** Interfaz ultra-premium enfocada en lo visual, donde la fotografía de cada artículo es la protagonista.
-2. **Cálculos Automáticos:** No hay que meter fórmulas. Añades el precio de compra, luego el de venta, y el sistema calcula la rentabilidad al vuelo.
-3. **Control Centralizado:** Un solo lugar seguro desde tu navegador para auditar tu catálogo completo y el estado de tus envíos o pedidos masivos.
+HUSTLE es una plataforma premium diseñada para gestionar inventarios, ventas y beneficios con una precisión absoluta y un diseño visual de élite. Olvídate de las hojas de cálculo aburridas; HUSTLE transforma la gestión de tu negocio (Vinted, Wallapop, eBay) en una experiencia fluida, rápida y estéticamente insuperable.
 
 ---
 
-## 🚀 Características Principales
+## ✨ Características Principales
 
-### 1. WishList e Inventario (Catálogo Principal)
-- **Vista en Cuadrícula (Grid) o Lista:** Adaptable instantáneamente según el dispositivo o preferencias del usuario.
-- **Galería de Imágenes Completa:** Permite subir y gestionar una foto principal y múltiples fotos secundarias para cada artículo de forma rápida y sencilla.
-- **Detalle Rico en Información:** Descripciones enriquecidas, enlaces externos (URLs de producto), precios, fechas automáticas y estado del producto.
-- **Diseño Premium "Dark AMOLED":** Transiciones suaves de estado, efectos *glassmorphism* integrados, esquemas de color eléctricos y un dark-mode absoluto optimizado para la legibilidad nocturna.
+### 1. Motor Visual Dinámico (Camaleón)
+- **Temas Adaptables:** Elige entre **Dark AMOLED** (negros puros para máximo contraste y ahorro de batería) o el nuevo **Modo Claro (Light)** para entornos diurnos.
+- **Inyección de Color Personalizada:** No estás atado a un solo color. Selecciona tu color de acento (Morado, Azul, Verde, Rojo, Amarillo, Rosa) y la aplicación entera adaptará sus botones, gráficas, sombras y efectos de neón al instante.
+- **Efectos Premium (Glow & Glassmorphism):** Resplandores dinámicos en tiempo real que reaccionan a tus interacciones y fondos translúcidos estilo iOS.
+- **Modo Compacto:** Ajusta la densidad de la interfaz con un solo clic para visualizar más información en la misma pantalla.
 
-### 2. Gestión Avanzada de Pedidos y Beneficios
-- **Agrupación Modular:** Permite crear y agrupar múltiples artículos dentro de un mismo pedido, manteniendo el historial limpio.
-- **Métricas en Tiempo Real:** Calcula instantáneamente el coste total invertido (Artículos comprados), los ingresos brutos (Artículos vendidos), y el margen de beneficio/pérdida neto.
-- **Badge Dinámico Global:** La cabecera superior muestra un contador de rentabilidad (Profit) global calculado sobre el historial completo. Se marca en verde si la cuenta global es rentable, y en rojo si está en pérdidas.
-- **Smart Sorting:** Dentro de un pedido, los artículos pendientes de venta ("Stock") flotan automáticamente en la parte superior. Una vez que se marca un precio de venta, el artículo pasa ordenadamente a la zona inferior de "vendidos".
+### 2. Gestión Financiera de Alta Precisión
+- **Cálculo de Beneficio Realizado:** El sistema separa inteligentemente tu "Inversión Activa" (artículos no vendidos) de tu "Beneficio Neto" (ingresos de ventas reales menos el coste de esos artículos específicos).
+- **Gráfica de Crecimiento Real:** Visualiza tu beneficio acumulado día a día con una gráfica de nodos reales que traza la historia de tus ingresos.
+- **ROI Automático:** Calcula el Retorno de Inversión promedio al instante.
 
-### 3. Seguridad y Adaptabilidad
-- **Lockout Inteligente:** El acceso incluye bloqueos automáticos progresivos tras múltiples intentos fallidos, protegidos con animaciones visuales que avisan del error.
-- **Mobile-First Responsive:** Se escala y se ajusta a la perfección. Menús de hamburguesa, hojas inferiores desliza-bles (bottom-sheets) tipo iOS y componentes interactivos diseñados para tocar en móviles.
+### 3. Ecosistema de Sincronización en Tiempo Real
+- **Arquitectura Event-Driven:** Todos los componentes de la app están conectados. Si añades una venta en la pantalla de pedidos, tu perfil, tus estadísticas globales y la gráfica de crecimiento se actualizan instantáneamente sin necesidad de recargar la página.
+
+### 4. Experiencia "Mobile-First" Extrema
+- **Haptic Feedback:** Vibraciones sutiles (respuestas táctiles) en dispositivos compatibles al interactuar con interruptores, botones de guardado o eliminar artículos, dando una sensación física a la interfaz digital.
+- **Control de Animaciones:** ¿Prefieres velocidad extrema o suavidad absoluta? Configura las animaciones entre *Full*, *Reduced* o *Off* según tus preferencias.
+- **Diseño Ergonómico:** Menús "Bottom-Sheet" que se deslizan desde abajo, diseñados específicamente para ser utilizados con una sola mano en pantallas móviles grandes.
+
+### 5. Control de Datos y Privacidad
+- **Exportación Total:** Descarga todo el historial de tu negocio en formatos CSV (para Excel) o JSON.
+- **Importación/Backups:** Restaura el estado completo de tu negocio subiendo tu archivo JSON de seguridad.
 
 ---
 
@@ -32,10 +35,10 @@ Llevar el control del inventario y los márgenes de beneficio suele requerir com
 
 El sistema fue diseñado apostando por un "stack" altamente desacoplado, sin frameworks o dependencias excesivas que entorpezcan la carga.
 
-- **Frontend (UI/UX):** React.js + TypeScript construido y servido con Vite. Diseño sin librerías externas pesadas como TailwindCSS o Bootstrap; uso exclusivo de Vanilla CSS robusto (variables nativas CSS, calc(), flex/grid, transitions de hardware) para un rendimiento extremo de los frames y animaciones.
-- **Backend (API):** FastAPI (Python) proporciona endpoints RESTful de extrema velocidad, además de la gestión interna para archivos pesados e imágenes locales.
-- **Base de Datos:** Motor SQLite incrustado mediante SQLAlchemy ORM (Object-Relational Mapping). Este enfoque permite usar bases de datos ligeras sin configuraciones de Docker ni dependencias externas, asegurando que la herramienta sea fácil de desplegar y auditar.
+- **Frontend (React.js + TypeScript):** Construido y servido con Vite. Diseño sin librerías externas pesadas (como TailwindCSS o Bootstrap); uso exclusivo de Vanilla CSS robusto (variables CSS inyectadas en tiempo real, calc(), flex/grid) para un rendimiento extremo.
+- **Backend (FastAPI - Python):** Proporciona endpoints RESTful de velocidad relámpago, gestión JWT para sesiones seguras y manipulación interna de archivos/imágenes.
+- **Base de Datos (SQLite + SQLAlchemy):** Motor embebido que permite una configuración "Zero-Config" garantizando que tus datos financieros sean portables y fáciles de respaldar.
 
 ---
 
-*Desarrollado y pulido para ser la máxima expresión de estética en una aplicación de gestión interna.*
+*Desarrollado y pulido para ser la máxima expresión de estética en una aplicación de gestión empresarial.*
