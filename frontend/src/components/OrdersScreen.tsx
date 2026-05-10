@@ -317,11 +317,12 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         <div className="order-items-list">
           {order.items.map(item => {
             const isExpanded = expandedItems[item.id]
+            const isDeleting = animatingDeleteId === item.id
             const soldCount = item.sales.filter(s => s.sell_price !== null).length
             const totalRevenue = item.sales.reduce((acc, s) => acc + (s.sell_price || 0), 0)
             const itemProfit = item.sales.reduce((sAcc, sale) => sale.sell_price ? sAcc + (sale.sell_price - item.buy_price) : sAcc, 0)
             return (
-              <div key={item.id} className="order-item-group">
+              <div key={item.id} className={`order-item-group ${isDeleting ? 'is-deleting' : ''}`}>
                 <div className="order-item-row" style={{ borderLeft: `3px solid ${soldCount > 0 ? '#10b981' : '#f59e0b'}` }}>
                   <div className="item-info" onClick={() => { if(item.article) { setSelectedArticle(item.article); setSelectedItemSales(totalRevenue > 0 ? totalRevenue : null); } }}>
                     <div className="item-image-container">
