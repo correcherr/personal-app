@@ -270,9 +270,9 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     if (price === null || price === undefined) return null;
     
     const colors = {
-      red: { bg: "var(--danger-soft)", border: "var(--border-strong)", text: "var(--danger)" },
-      yellow: { bg: "var(--warning-soft)", border: "var(--border-strong)", text: "var(--warning)" },
-      green: { bg: "var(--success-soft)", border: "var(--border-strong)", text: "var(--success)" }
+      red: { bg: "rgba(239, 68, 68, 0.1)", border: "rgba(239, 68, 68, 0.2)", text: "#ef4444" },
+      yellow: { bg: "rgba(245, 158, 11, 0.15)", border: "rgba(245, 158, 11, 0.3)", text: "#f59e0b" },
+      green: { bg: "rgba(16, 185, 129, 0.15)", border: "rgba(16, 185, 129, 0.3)", text: "#10b981" }
     }
     
     const style = colors[type];
@@ -389,15 +389,37 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         const profit = revenue - cost
         const isActive = detailOrderId === order.id
         
+        // Status logic
+        const totalItems = order.items.reduce((acc, item) => acc + item.quantity, 0)
+        const soldItems = order.items.reduce((acc, item) => acc + item.sales.filter(s => s.sell_price !== null).length, 0)
+        let statusColor = 'rgba(255,255,255,0.1)'; // Empty / Neutral
+        if (totalItems > 0) {
+          statusColor = soldItems === totalItems ? 'var(--success)' : 'var(--warning)';
+        }
+        
         return (
           <div 
             key={order.id} 
-            className={`order-card ${isActive && isDesktop ? 'active' : ''}`} 
+            className={`order-card glow-hover ${isActive && isDesktop ? 'active' : ''}`} 
             onClick={() => setDetailOrderId(order.id)} 
-            style={{ cursor: "pointer", userSelect: "none" }}
+            style={{ 
+              cursor: "pointer", 
+              userSelect: "none",
+              background: "#0D0D0D",
+              borderRadius: "16px",
+              padding: "18px",
+              marginBottom: "12px",
+              border: isActive && isDesktop ? "1px solid var(--accent)" : "1px solid rgba(255,255,255,0.02)",
+              borderLeft: `3px solid ${statusColor}`,
+              position: "relative",
+              overflow: "hidden"
+            }}
           >
-            <div className="order-card-header">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {isActive && isDesktop && (
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, var(--accent-soft) 0%, transparent 100%)', pointerEvents: 'none', opacity: 0.5 }}></div>
+            )}
+            <div className="order-card-header" style={{ position: 'relative', zIndex: 1, marginBottom: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {order.platform && (
                   <span style={{ 
                     fontSize: '0.65rem', 
@@ -412,39 +434,41 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                     {order.platform}
                   </span>
                 )}
-                <h3>
-                  {order.name} <span className="order-date">{order.date}</span>
+                <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0, color: 'var(--text-1)' }}>
+                  {order.name}
                 </h3>
+                <span className="order-date" style={{ fontSize: '0.75rem', color: 'var(--text-3)', fontWeight: 500 }}>{order.date}</span>
               </div>
               <button className="btn-delete-order" onClick={(e) => {
                 e.stopPropagation()
                 setDeleteOrderTarget(order.id)
-              }}>×</button>
+              }} style={{ background: 'transparent', border: 'none', color: 'var(--text-3)', cursor: 'pointer', fontSize: '1.2rem' }}>×</button>
             </div>
             
-            <div className="order-summary" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ display: "flex", gap: "20px" }}>
-                <div className="summary-stat">
-                  <span>Artículos</span>
-                  <strong>{order.items.reduce((s, i) => s + i.quantity, 0)}</strong>
+            <div className="order-summary" style={{ position: 'relative', zIndex: 1, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: "16px" }}>
+                <div className="summary-stat" style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-3)', textTransform: 'uppercase', fontWeight: 700 }}>Artículos</span>
+                  <strong style={{ fontSize: '0.9rem', color: 'var(--text-1)' }}>{totalItems}</strong>
                 </div>
-                <div className="summary-stat">
-                  <span>Beneficio</span>
-                  <strong style={{ color: profit >= 0 ? "var(--success)" : "var(--danger)" }}>
+                <div className="summary-stat" style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-3)', textTransform: 'uppercase', fontWeight: 700 }}>Beneficio</span>
+                  <strong style={{ fontSize: '0.9rem', color: profit >= 0 ? "var(--success)" : "var(--danger)" }}>
                     {formatPrice(profit, user?.currency)}
                   </strong>
                 </div>
               </div>
               <div style={{ 
-                width: "32px", 
-                height: "32px", 
+                width: "28px", 
+                height: "28px", 
                 borderRadius: "50%", 
-                background: "var(--accent-soft)", 
+                background: isActive && isDesktop ? "var(--accent)" : "var(--accent-soft)", 
                 display: "flex", 
                 alignItems: "center", 
                 justifyContent: "center",
-                color: "var(--accent)",
-                fontSize: "1.2rem"
+                color: isActive && isDesktop ? "#fff" : "var(--accent)",
+                fontSize: "1rem",
+                transition: "all 0.2s"
               }}>
                 →
               </div>
@@ -562,7 +586,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                   <div className="order-item-row" style={{
                     background: "#0D0D0D", 
                     border: "1px solid rgba(255,255,255,0.03)", 
-                    borderLeft: `3px solid ${soldCount === 0 ? 'rgba(255,255,255,0.1)' : (soldCount === item.quantity ? 'var(--success)' : 'var(--warning)')}`,
+                    borderLeft: `3px solid ${soldCount > 0 ? '#10b981' : '#f59e0b'}`,
                     padding: "16px", 
                     borderRadius: "16px", 
                     display: "flex",
@@ -629,10 +653,9 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", flex: 1, alignItems: "center" }}>
                         {renderPriceBadge("Compra", item.buy_price * item.quantity, "red")}
                         {renderPriceBadge("Rec.", (item.article?.recommended_price || 0) * item.quantity, "yellow")}
-                        
                         {item.quantity === 1 ? (
                           <div style={{ marginLeft: "8px", flex: 1, maxWidth: "150px" }}>
-                            <UnitSaleInput sale={item.sales[0]} buyPrice={item.buy_price} orderId={selectedOrder.id} isInline />
+                            <UnitSaleInput sale={item.sales[0]} buyPrice={item.buy_price} orderId={order.id} isInline />
                           </div>
                         ) : (
                           renderPriceBadge("Venta", totalRevenue, "green")
@@ -940,18 +963,18 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: selectedItemSales ? "1fr 1fr 1fr" : "1fr 1fr", gap: "12px", marginBottom: "32px" }}>
-              <div style={{ padding: "12px", background: "var(--danger-soft)", borderRadius: "16px", border: "1px solid var(--border-strong)" }}>
-                <div style={{ fontSize: "0.6rem", color: "var(--danger)", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Compra</div>
-                <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--danger)" }}>{formatPrice(selectedArticle.purchase_price, user?.currency)}</div>
+              <div style={{ padding: "12px", background: "rgba(239, 68, 68, 0.1)", borderRadius: "16px", border: "1px solid rgba(239, 68, 68, 0.2)" }}>
+                <div style={{ fontSize: "0.6rem", color: "#ef4444", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Compra</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#ef4444" }}>{formatPrice(selectedArticle.purchase_price, user?.currency)}</div>
               </div>
-              <div style={{ padding: "12px", background: "var(--warning-soft)", borderRadius: "16px", border: "1px solid var(--border-strong)" }}>
-                <div style={{ fontSize: "0.6rem", color: "var(--warning)", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Recomendado</div>
-                <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--warning)" }}>{formatPrice(selectedArticle.recommended_price, user?.currency)}</div>
+              <div style={{ padding: "12px", background: "rgba(245, 158, 11, 0.15)", borderRadius: "16px", border: "1px solid rgba(245, 158, 11, 0.3)" }}>
+                <div style={{ fontSize: "0.6rem", color: "#f59e0b", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Recomendado</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f59e0b" }}>{formatPrice(selectedArticle.recommended_price, user?.currency)}</div>
               </div>
               {selectedItemSales && (
-                <div style={{ padding: "12px", background: "var(--success-soft)", borderRadius: "16px", border: "1px solid var(--border-strong)" }}>
-                  <div style={{ fontSize: "0.6rem", color: "var(--success)", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Venta Total</div>
-                  <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--success)" }}>{formatPrice(selectedItemSales, user?.currency)}</div>
+                <div style={{ padding: "12px", background: "rgba(16, 185, 129, 0.15)", borderRadius: "16px", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
+                  <div style={{ fontSize: "0.6rem", color: "#10b981", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Venta Total</div>
+                  <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#10b981" }}>{formatPrice(selectedItemSales, user?.currency)}</div>
                 </div>
               )}
             </div>
@@ -997,17 +1020,26 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
             <span style={{ color: "var(--text-2)", fontWeight: 700, fontSize: "0.9rem" }}>Pedidos</span>
           </div>
           
-          {/* Stats & Add Row */}
-          <div style={{ padding: "0 20px 16px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "16px" }}>
+          {/* Header Sticky con Blur */}
+          <div style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            padding: "24px 32px",
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(20px)",
+            borderBottom: "1px solid rgba(255,255,255,0.05)",
+            marginBottom: "24px"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "20px" }}>
               <div>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 800, margin: 0 }}>{selectedOrder.name}</h2>
-                <p style={{ fontSize: "0.8rem", color: "var(--text-3)", margin: "4px 0 0" }}>{selectedOrder.date}</p>
+                <h2 style={{ fontSize: "1.8rem", fontWeight: 800, margin: 0, color: "var(--text-1)", letterSpacing: "-0.02em" }}>{selectedOrder.name}</h2>
+                <p style={{ fontSize: "0.85rem", color: "var(--text-3)", margin: "4px 0 0", fontWeight: 500 }}>{selectedOrder.date}</p>
               </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "0.65rem", color: "var(--text-3)", textTransform: "uppercase", fontWeight: 700 }}>Beneficio</div>
+              <div style={{ textAlign: "right", background: "#111", padding: "12px 16px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.03)" }}>
+                <div style={{ fontSize: "0.65rem", color: "var(--text-3)", textTransform: "uppercase", fontWeight: 700, marginBottom: "4px" }}>Beneficio Neto</div>
                 <div style={{ 
-                  fontSize: "1.2rem", 
+                  fontSize: "1.4rem", 
                   fontWeight: 900, 
                   color: selectedOrder.items.reduce((acc, item) => {
                     return acc + item.sales.reduce((sAcc, sale) => sale.sell_price ? sAcc + (sale.sell_price - item.buy_price) : sAcc, 0)
@@ -1024,13 +1056,22 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
             </div>
             
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div style={{ fontSize: "0.8rem", color: "var(--text-2)", fontWeight: 600 }}>
-                {selectedOrder.items.reduce((acc, item) => acc + item.sales.filter(s => s.sell_price !== null).length, 0)}/{selectedOrder.items.reduce((acc, item) => acc + item.quantity, 0)} Artículos
+              <div style={{ fontSize: "0.85rem", color: "var(--text-2)", fontWeight: 600 }}>
+                <span style={{ color: "var(--text-1)" }}>{selectedOrder.items.reduce((acc, item) => acc + item.sales.filter(s => s.sell_price !== null).length, 0)}</span> / {selectedOrder.items.reduce((acc, item) => acc + item.quantity, 0)} Artículos vendidos
               </div>
               <button 
-                className="btn-add-item-small" 
+                className="btn-add-item-small glow-hover" 
                 onClick={() => openAddItem(selectedOrder.id)}
-                style={{ padding: "8px 16px", borderRadius: "10px", fontSize: "0.85rem" }}
+                style={{ 
+                  padding: "10px 20px", 
+                  borderRadius: "12px", 
+                  fontSize: "0.85rem", 
+                  fontWeight: 700,
+                  background: "var(--accent)",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer"
+                }}
               >
                 + Añadir Producto
               </button>
@@ -1039,7 +1080,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         </div>
 
         {/* Scrollable Content Section */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 120px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "0 32px 120px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {selectedOrder.items.length === 0 && <p style={{padding: "60px 20px", color: "var(--text-3)", textAlign: "center"}}>No hay artículos todavía.</p>}
             {[...selectedOrder.items].sort((a, b) => a.id - b.id).map(item => {
@@ -1051,17 +1092,17 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
               const isAnimatingExit = animatingDeleteId === item.id
               
               return (
-                <div key={item.id} className={`order-item-group ${isAnimatingExit ? 'animate-exit-left' : 'animate-item'}`} style={{ marginBottom: "8px" }}>
+                <div key={item.id} className={`order-item-group ${isAnimatingExit ? 'animate-exit-left' : 'animate-item'}`} style={{ marginBottom: "16px" }}>
                   <div className="order-item-row" style={{
                     background: "#0D0D0D", 
                     border: "1px solid rgba(255,255,255,0.03)", 
-                    borderLeft: `3px solid ${soldCount === 0 ? 'rgba(255,255,255,0.1)' : (soldCount === item.quantity ? 'var(--success)' : 'var(--warning)')}`,
-                    padding: "16px", 
+                    borderLeft: `3px solid ${soldCount > 0 ? '#10b981' : '#f59e0b'}`,
+                    padding: "20px", 
                     borderRadius: "16px", 
                     display: "flex",
                     flexDirection: "column",
-                    gap: "12px",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.5)"
+                    gap: "16px",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
                     }} 
                   >
                     {/* Item Top: Info/Detail trigger */}

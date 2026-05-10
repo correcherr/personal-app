@@ -4,7 +4,7 @@ import { API, authFetch, formatPrice } from '../utils/helpers';
 
 type Period = '7d' | '30d' | '3m' | '1y' | 'all';
 
-export function StatsScreen({ onBack }: { onBack: () => void }) {
+export function StatsScreen({ onBack, hideBackButton }: { onBack: () => void, hideBackButton?: boolean }) {
   const { user } = useAuth();
   const [period, setPeriod] = useState<Period>('30d');
   const [loading, setLoading] = useState(true);
@@ -53,12 +53,22 @@ export function StatsScreen({ onBack }: { onBack: () => void }) {
   }
 
   return (
-    <div className="stats-screen animate-slide-in-right" style={{ padding: '0 20px 120px' }}>
-      {/* HEADER */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', paddingTop: '10px' }}>
-        <button onClick={onBack} style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-1)', fontSize: '1.2rem' }}>←</button>
-        <h1 style={{ fontSize: '24px', fontWeight: 900 }}>Estadísticas</h1>
-      </div>
+    <div className="stats-screen" style={{ paddingBottom: '100px' }}>
+      {!hideBackButton && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+          <button 
+            onClick={onBack}
+            style={{ 
+              width: '40px', height: '40px', borderRadius: '12px', background: 'var(--bg-elevated)', 
+              border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--text-1)', fontSize: '1.2rem', cursor: 'pointer'
+            }}
+          >
+            ←
+          </button>
+          <h2 style={{ fontSize: '20px', fontWeight: 800 }}>Estadísticas</h2>
+        </div>
+      )}
 
       {/* PERIOD SELECTOR */}
       <div style={{ 
