@@ -228,6 +228,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         <input 
           type="text" value={val} onChange={(e) => setVal(e.target.value)}
           onBlur={() => handleUpdateUnitSalePrice(sale.id, val)}
+          className="sale-input"
           style={{
             flex: 1, padding: "10px 14px", borderRadius: "10px", border: `1px solid ${currentPrice != null ? "var(--success)" : "rgba(255,255,255,0.08)"}`,
             background: "#1A1A1A", color: currentPrice != null ? "var(--success)" : "var(--text-1)", fontSize: "1rem", outline: "none"
@@ -286,7 +287,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     </div>
   )
 
-  const renderUnitSales = (item: OrderItem, _orderId: number) => (
+  const renderUnitSales = (item: OrderItem) => (
     <div className="unit-sales-expanded">
       {item.sales.map((sale: any) => (
         <div key={sale.id} className="unit-sale-row">
@@ -312,7 +313,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
               <div className="header-stat"><span>Beneficio</span><strong style={{ color: profit >= 0 ? "var(--success)" : "var(--danger)" }}>{formatPrice(profit, user?.currency)}</strong></div>
             </div>
           </div>
-          <div className="detail-actions"><h3>Artículos</h3><button onClick={() => openAddItem(order.id)}>+ Añadir</button></div>
+          <div className="detail-actions"><h3>Artículos</h3><button className="btn-add-primary" onClick={() => openAddItem(order.id)}>+ Añadir</button></div>
         </div>
         <div className="order-items-list">
           {order.items.map(item => {
@@ -341,7 +342,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                     {item.quantity > 1 && <div className={`expand-icon ${isExpanded ? 'up' : ''}`}>↓</div>}
                   </div>
                 </div>
-                {isExpanded && item.quantity > 1 && renderUnitSales(item, order.id)}
+                {isExpanded && item.quantity > 1 && renderUnitSales(item)}
               </div>
             )
           })}
@@ -357,7 +358,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
       {isDesktop ? (
         <div className="orders-desktop-layout">
           <div className="orders-sidebar">
-            <div className="sidebar-header"><h1>Pedidos</h1><button onClick={() => setOrderModalOpen(true)}>+</button></div>
+            <div className="sidebar-header"><h1>Pedidos</h1><button className="btn-add-circle" onClick={() => setOrderModalOpen(true)}>+</button></div>
             {renderOrderList()}
           </div>
           <div className="orders-content">{selectedOrder ? renderOrderDetailContent(selectedOrder) : <div className="empty-selection">Selecciona un pedido</div>}</div>
@@ -371,29 +372,63 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
         </div>
       )}
 
-      {/* Modales simplificados por espacio */}
+      {/* Modales Premium */}
       {orderModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Nuevo Pedido</h2>
-            <form onSubmit={handleCreateOrder}>
-              <input value={newOrderName} onChange={e => setNewOrderName(e.target.value)} placeholder="Nombre del pedido" />
-              <div className="modal-actions"><button type="button" onClick={() => setOrderModalOpen(false)}>Cancelar</button><button type="submit">Crear</button></div>
+        <div className="modal-overlay" onClick={() => setOrderModalOpen(false)}>
+          <div className="modal-content modern-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Nuevo Pedido</h2>
+              <button className="btn-close-modal" onClick={() => setOrderModalOpen(false)}>×</button>
+            </div>
+            <form onSubmit={handleCreateOrder} className="modern-form">
+              <div className="input-group">
+                <label>Nombre del Pedido</label>
+                <input autoFocus value={newOrderName} onChange={e => setNewOrderName(e.target.value)} placeholder="Ej: Mercadillo Mayo" />
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setOrderModalOpen(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary">Crear Pedido</button>
+              </div>
             </form>
           </div>
         </div>
       )}
 
       {addItemModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Añadir Producto</h2>
-            <form onSubmit={handleAddItemSubmit}>
-              <input value={newItemName} onChange={e => setNewItemName(e.target.value)} placeholder="Nombre" />
-              <input value={newItemBuyPrice} onChange={e => setNewItemBuyPrice(e.target.value)} placeholder="Precio Compra" />
-              <input value={newItemRecPrice} onChange={e => setNewItemRecPrice(e.target.value)} placeholder="Precio Rec." />
-              <input type="file" onChange={e => setNewItemFile(e.target.files?.[0] || null)} />
-              <div className="modal-actions"><button type="button" onClick={() => setAddItemModalOpen(false)}>Cancelar</button><button type="submit">Añadir</button></div>
+        <div className="modal-overlay" onClick={() => setAddItemModalOpen(false)}>
+          <div className="modal-content modern-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Añadir Producto</h2>
+              <button className="btn-close-modal" onClick={() => setAddItemModalOpen(false)}>×</button>
+            </div>
+            <form onSubmit={handleAddItemSubmit} className="modern-form">
+              <div className="input-group">
+                <label>Nombre del Artículo</label>
+                <input autoFocus value={newItemName} onChange={e => setNewItemName(e.target.value)} placeholder="Nombre" />
+              </div>
+              <div className="input-row">
+                <div className="input-group">
+                  <label>Precio Compra</label>
+                  <input value={newItemBuyPrice} onChange={e => setNewItemBuyPrice(e.target.value)} placeholder="0.00" />
+                </div>
+                <div className="input-group">
+                  <label>Precio Rec.</label>
+                  <input value={newItemRecPrice} onChange={e => setNewItemRecPrice(e.target.value)} placeholder="Opcional" />
+                </div>
+              </div>
+              <div className="input-group">
+                <label>Imagen</label>
+                <div className="file-upload-wrapper">
+                  <input type="file" onChange={e => setNewItemFile(e.target.files?.[0] || null)} id="item-file" />
+                  <label htmlFor="item-file" className="file-label">
+                    {newItemFile ? newItemFile.name : 'Seleccionar imagen...'}
+                  </label>
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="btn-secondary" onClick={() => setAddItemModalOpen(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary">Añadir al Pedido</button>
+              </div>
             </form>
           </div>
         </div>
@@ -401,17 +436,44 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
 
       {selectedArticle && (
         <div className="modal-overlay" onClick={() => setSelectedArticle(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2>Detalle Artículo</h2>
-            <p>{selectedArticle.name}</p>
-            {selectedItemSales && <p>Venta Total: {formatPrice(selectedItemSales, user?.currency)}</p>}
-            <button onClick={() => setSelectedArticle(null)}>Cerrar</button>
+          <div className="modal-content glass-modal" onClick={e => e.stopPropagation()}>
+             <div className="modal-header">
+               <h2>{selectedArticle.name}</h2>
+               <button className="btn-close-modal" onClick={() => setSelectedArticle(null)}>×</button>
+             </div>
+             <div className="article-detail-body">
+               {selectedArticle.image_url && <img src={selectedArticle.image_url.startsWith('http') ? selectedArticle.image_url : `${API}${selectedArticle.image_url}`} alt={selectedArticle.name} />}
+               <div className="detail-stats">
+                 <div className="stat-card"><span>Precio Base</span><strong>{formatPrice(selectedArticle.purchase_price, user?.currency)}</strong></div>
+                 {selectedItemSales && <div className="stat-card"><span>Venta Total</span><strong style={{ color: 'var(--success)' }}>{formatPrice(selectedItemSales, user?.currency)}</strong></div>}
+               </div>
+             </div>
           </div>
         </div>
       )}
 
-      {deleteOrderTarget && <div className="modal-overlay">Confirmar eliminar pedido... <button onClick={handleDeleteOrder}>Sí</button><button onClick={() => setDeleteOrderTarget(null)}>No</button></div>}
-      {deleteItemTarget && <div className="modal-overlay">Confirmar eliminar artículo... <button onClick={handleDeleteItem}>Sí</button><button onClick={() => setDeleteItemTarget(null)}>No</button></div>}
+      {deleteOrderTarget && (
+        <div className="modal-overlay">
+          <div className="modal-content confirm-modal">
+            <p>¿Seguro que quieres eliminar este pedido?</p>
+            <div className="modal-actions">
+              <button onClick={() => setDeleteOrderTarget(null)}>No, cancelar</button>
+              <button className="btn-danger" onClick={handleDeleteOrder}>Sí, eliminar</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {deleteItemTarget && (
+        <div className="modal-overlay">
+          <div className="modal-content confirm-modal">
+            <p>¿Eliminar este artículo del pedido?</p>
+            <div className="modal-actions">
+              <button onClick={() => setDeleteItemTarget(null)}>Cancelar</button>
+              <button className="btn-danger" onClick={handleDeleteItem}>Eliminar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
