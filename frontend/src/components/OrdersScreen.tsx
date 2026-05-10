@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import type { Order, Article, OrderItem } from "../types";
+import type { Order, Article } from "../types";
 import { API, capitalizeFirst, authFetch, formatPrice, triggerRefresh } from "../utils/helpers";
 import { useDevice } from "../hooks/useMediaQuery";
 import { useAuth } from "../context/AuthContext";
