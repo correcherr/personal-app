@@ -1,0 +1,36 @@
+# Ignorar archivos y carpetas del sistema/IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Ignorar archivos de entorno (secretos)
+.env
+.env.*
+!.env.example
+
+# Frontend (React/Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.npm/
+frontend/.eslintcache
+frontend/coverage/
+
+# Backend (Python/FastAPI)
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/venv/
+backend/env/
+backend/.pytest_cache/
+backend/alembic.ini
+
+# Bases de datos y archivos generados
+backend/*.db
+backend/*.sqlite3
+
+# Archivos de usuario subidos
+backend/uploads/*
+!backend/uploads/.keep
