@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import type { Order, Article } from "../types";
+import type { Order, Article, OrderItem } from "../types";
 import { API, capitalizeFirst, authFetch, formatPrice, triggerRefresh } from "../utils/helpers";
 import { useDevice } from "../hooks/useMediaQuery";
-import { useAuth, useTranslation } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: number) => void }) {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([])
   const [articles, setArticles] = useState<Article[]>([])
   const { isDesktop } = useDevice()
@@ -25,7 +24,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   const [newOrderName, setNewOrderName] = useState("")
 
   const [addItemModalOpen, setAddItemModalOpen] = useState(false)
-  const [activeOrderId, setActiveOrderId] = useState<number | null>(null)
+  const [activeOrderId, _setActiveOrderId] = useState<number | null>(null)
   
   // Form for new item/article
   const [newItemName, setNewItemName] = useState("")
@@ -38,11 +37,10 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   
   // Article Detail State
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
-  const [selectedItemSales, setSelectedItemSales] = useState<number | null>(null) // To store the total sales of the item being viewed
 
   const [editBuyPriceModalOpen, setEditBuyPriceModalOpen] = useState(false)
   const [editBuyPrice, setEditBuyPrice] = useState("")
-  const [activeItemId, setActiveItemId] = useState<number | null>(null)
+  const [activeItemId, _setActiveItemId] = useState<number | null>(null)
   
   // Delete confirm states
   const [deleteOrderTarget, setDeleteOrderTarget] = useState<number | null>(null)
@@ -249,23 +247,6 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     } catch {}
   }
 
-  const handleUpdateBuyPriceSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!activeItemId) return
-    const buy_price = parseFloat(editBuyPrice.replace(',','.'))
-    if (isNaN(buy_price) || buy_price <= 0) return
-    try {
-      await authFetch(`${API}/api/orders/items/${activeItemId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ buy_price })
-      })
-      fetchOrders()
-      triggerRefresh()
-      setEditBuyPriceModalOpen(false)
-    } catch {}
-  }
-
   const renderPriceBadge = (label: string, price: number | null | undefined, type: 'red' | 'yellow' | 'green') => {
     if (price === null || price === undefined) return null;
     
@@ -383,7 +364,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
 
   const renderOrderList = () => (
     <div className={`card-list ${isDesktop ? 'desktop' : 'mobile'}`}>
-      {orders.map(order => {
+      {orders.map((order) => {
         const cost = order.items.reduce((acc, item) => acc + (item.buy_price * item.quantity), 0)
         const revenue = order.items.reduce((acc, item) => acc + item.sales.reduce((s, sale) => s + (sale.sell_price || 0), 0), 0)
         const profit = revenue - cost
@@ -479,7 +460,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
     </div>
   )
 
-  const renderUnitSales = (item: any, orderId: number) => {
+  const renderUnitSales = (item: OrderItem, _orderId: number) => {
     return (
       <div className="unit-sales-expanded" style={{
         marginTop: "8px",
@@ -1087,7 +1068,6 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
               const isExpanded = expandedItems[item.id]
               const soldCount = item.sales.filter(s => s.sell_price !== null).length
               const totalRevenue = item.sales.reduce((acc, s) => acc + (s.sell_price || 0), 0)
-              const itemCost = item.buy_price * item.quantity
               const itemProfit = item.sales.reduce((sAcc, sale) => sale.sell_price ? sAcc + (sale.sell_price - item.buy_price) : sAcc, 0)
               const isAnimatingExit = animatingDeleteId === item.id
               

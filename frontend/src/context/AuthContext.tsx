@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API, authFetch } from '../utils/helpers';
+import { API } from '../utils/helpers';
 import { translations, type TranslationKey } from '../utils/translations';
 
 interface User {
@@ -9,8 +9,15 @@ interface User {
   profile_photo: string | null;
   currency: string;
   language: string;
+  theme: string;
   animation_level: string;
   neon_glow: boolean;
+  compact_mode: boolean;
+  haptics: boolean;
+  accent_color: string;
+  business_name: string;
+  platform: string;
+  product_type: string;
 }
 
 interface AuthContextType {

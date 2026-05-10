@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { useAuth, useTranslation } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { API, authFetch, formatPrice } from '../utils/helpers';
 
 type Period = '7d' | '30d' | '3m' | '1y' | 'all';

@@ -30,8 +30,8 @@ export function ProfileScreen() {
   const [passMsg, setPassMsg] = useState({ text: '', type: '' });
 
   // Refs for debouncing
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const checkUsernameTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<any>(null);
+  const checkUsernameTimeoutRef = useRef<any>(null);
 
   useEffect(() => {
     const fetchExtra = async () => {
@@ -781,18 +781,6 @@ function MenuItem({ icon, label, sub, onClick }: { icon: string, label: string, 
   );
 }
 
-function StatBox({ label, value, isPrice, currency, lang, suffix, color }: any) {
-  const displayValue = isPrice 
-    ? new Intl.NumberFormat(lang === 'ES' ? 'es-ES' : 'en-US', { style: 'currency', currency: currency || 'EUR' }).format(value || 0)
-    : `${(value || 0).toFixed(1)}${suffix || ''}`;
-    
-  return (
-    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border)' }}>
-      <div style={{ fontSize: '11px', color: 'var(--text-3)', textTransform: 'uppercase', fontWeight: 800, marginBottom: '4px' }}>{label}</div>
-      <div style={{ fontSize: '1.4rem', fontWeight: 900, color }}>{value != null ? displayValue : '---'}</div>
-    </div>
-  );
-}
 
 // Sub-componente para el toggle en escritorio
 function DesktopToggle({ active, onChange }: { active: boolean, onChange: (v: boolean) => void }) {
