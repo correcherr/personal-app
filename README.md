@@ -1,95 +1,41 @@
-# FlipManager (WishList & Order System)
+## 🎯 El Problema que Resuelve
 
-![FlipManager Banner](https://placehold.co/1200x400/08080a/3b82f6?text=FlipManager+%7C+Order+%26+Arbitrage+System)
+Llevar el control del inventario y los márgenes de beneficio suele requerir complejas hojas de cálculo de Excel o herramientas de gestión genéricas que carecen de atractivo visual. FlipManager soluciona esto ofreciendo:
 
-FlipManager es una aplicación web de diseño premium, altamente interactiva y responsiva, diseñada para gestionar de forma eficiente una WishList (o inventario de productos) y agrupar artículos en "Pedidos" calculando costes, ingresos y beneficios netos en tiempo real.
-
-Ideal para proyectos de arbitraje (comprar barato y vender caro), reventa, o simplemente para llevar un registro elegante y seguro del inventario personal.
+1. **Claridad Visual:** Interfaz ultra-premium enfocada en lo visual, donde la fotografía de cada artículo es la protagonista.
+2. **Cálculos Automáticos:** No hay que meter fórmulas. Añades el precio de compra, luego el de venta, y el sistema calcula la rentabilidad al vuelo.
+3. **Control Centralizado:** Un solo lugar seguro desde tu navegador para auditar tu catálogo completo y el estado de tus envíos o pedidos masivos.
 
 ---
 
 ## 🚀 Características Principales
 
 ### 1. WishList e Inventario (Catálogo Principal)
-- **Vista en Cuadrícula (Grid) o Lista:** Adaptable según preferencias del usuario.
-- **Galería de Imágenes Completa:** Permite la subida de una foto principal y múltiples fotos secundarias para cada artículo (almacenadas localmente).
-- **Detalle Rico en Información:** Descripciones, links externos (URLs de producto), precios, fechas automáticas de creación y navegación elegante por las galerías.
-- **Diseño Premium:** Transiciones suaves, efectos glassmorphism, esquemas de color eléctricos y dark-mode nativo.
+- **Vista en Cuadrícula (Grid) o Lista:** Adaptable instantáneamente según el dispositivo o preferencias del usuario.
+- **Galería de Imágenes Completa:** Permite subir y gestionar una foto principal y múltiples fotos secundarias para cada artículo de forma rápida y sencilla.
+- **Detalle Rico en Información:** Descripciones enriquecidas, enlaces externos (URLs de producto), precios, fechas automáticas y estado del producto.
+- **Diseño Premium "Dark AMOLED":** Transiciones suaves de estado, efectos *glassmorphism* integrados, esquemas de color eléctricos y un dark-mode absoluto optimizado para la legibilidad nocturna.
 
-### 2. Gestión Avanzada de Pedidos y Beneficios (Orders Module)
-- **Agrupación de Artículos:** Permite crear y agrupar múltiples artículos bajo un mismo pedido.
-- **Métricas en Tiempo Real:** Calcula el coste total de los artículos comprados, los ingresos de los artículos vendidos, y el beneficio/pérdida neto.
-- **Badge de Beneficios Global:** Rastreo dinámico del beneficio (Profit) total de todos los pedidos directamente en la cabecera, marcándose en verde si es positivo y en rojo si es negativo.
-- **Organización Automática:** Dentro de cada pedido, los artículos sin vender ("Stock") se fijan en la parte superior, mientras que los artículos vendidos se agrupan debajo de forma automática.
+### 2. Gestión Avanzada de Pedidos y Beneficios
+- **Agrupación Modular:** Permite crear y agrupar múltiples artículos dentro de un mismo pedido, manteniendo el historial limpio.
+- **Métricas en Tiempo Real:** Calcula instantáneamente el coste total invertido (Artículos comprados), los ingresos brutos (Artículos vendidos), y el margen de beneficio/pérdida neto.
+- **Badge Dinámico Global:** La cabecera superior muestra un contador de rentabilidad (Profit) global calculado sobre el historial completo. Se marca en verde si la cuenta global es rentable, y en rojo si está en pérdidas.
+- **Smart Sorting:** Dentro de un pedido, los artículos pendientes de venta ("Stock") flotan automáticamente en la parte superior. Una vez que se marca un precio de venta, el artículo pasa ordenadamente a la zona inferior de "vendidos".
 
-### 3. Seguridad y Diseño Adaptativo
-- **Pantalla de Acceso Inteligente:** Bloqueo automático (Lockout) tras múltiples intentos fallidos de inicio de sesión con animaciones de error integradas ("shake effect").
-- **Responsive Web Design:** Funciona a la perfección tanto en monitores 4K (Grid System expansivo) como en pantallas de smartphones con menús hamburguesa optimizados y botones tipo "pill" modernos.
+### 3. Seguridad y Adaptabilidad
+- **Lockout Inteligente:** El acceso incluye bloqueos automáticos progresivos tras múltiples intentos fallidos, protegidos con animaciones visuales que avisan del error.
+- **Mobile-First Responsive:** Se escala y se ajusta a la perfección. Menús de hamburguesa, hojas inferiores desliza-bles (bottom-sheets) tipo iOS y componentes interactivos diseñados para tocar en móviles.
 
 ---
 
 ## 🛠 Arquitectura Tecnológica
 
-- **Frontend (UI/UX):** React.js + TypeScript + Vite. Uso avanzado de CSS puro (variables, calc, flex/grid, transitions, animaciones keyframe) sin dependencias excesivas, lo cual garantiza una carga ultra rápida y una personalización exhaustiva.
-- **Backend (API):** FastAPI (Python) proporciona un enrutamiento RESTful a alta velocidad y gestión de archivos (Uploads) de forma muy fluida.
-- **Base de Datos:** SQLite automatizado a través de SQLAlchemy ORM, que facilita las migraciones y no requiere servidores pesados en local.
+El sistema fue diseñado apostando por un "stack" altamente desacoplado, sin frameworks o dependencias excesivas que entorpezcan la carga.
+
+- **Frontend (UI/UX):** React.js + TypeScript construido y servido con Vite. Diseño sin librerías externas pesadas como TailwindCSS o Bootstrap; uso exclusivo de Vanilla CSS robusto (variables nativas CSS, calc(), flex/grid, transitions de hardware) para un rendimiento extremo de los frames y animaciones.
+- **Backend (API):** FastAPI (Python) proporciona endpoints RESTful de extrema velocidad, además de la gestión interna para archivos pesados e imágenes locales.
+- **Base de Datos:** Motor SQLite incrustado mediante SQLAlchemy ORM (Object-Relational Mapping). Este enfoque permite usar bases de datos ligeras sin configuraciones de Docker ni dependencias externas, asegurando que la herramienta sea fácil de desplegar y auditar.
 
 ---
 
-## 💻 Instalación y Despliegue en Servidor
-
-### Requisitos Previos
-- Node.js y npm (para el Frontend)
-- Python 3.9 o superior (para el Backend)
-
-### 1. Clonar el Repositorio
-```bash
-git clone https://github.com/TU_USUARIO/FlipManager.git
-cd FlipManager
-```
-
-### 2. Configurar el Backend (FastAPI)
-```bash
-cd backend
-
-# Crear un entorno virtual e instalar dependencias
-python -m venv venv
-source venv/bin/activate  # En Windows usa: venv\Scripts\activate
-pip install -r requirements.txt # (Asegúrate de instalar fastapi, uvicorn, sqlalchemy, python-multipart, etc.)
-
-# CONFIGURAR VARIABLES DE ENTORNO
-# Duplica el archivo .env.example como .env y establece una contraseña segura
-cp .env.example .env
-
-# Ejecutar el servidor
-uvicorn main:app --reload --port 8000
-```
-> **Nota de Seguridad:** Nunca expongas tu archivo `.env` en repositorios públicos. Este proyecto incluye un estricto `.gitignore` para protegerte.
-
-### 3. Configurar el Frontend (React + Vite)
-```bash
-cd ../frontend
-
-# Instalar los paquetes
-npm install
-
-# Iniciar el servidor en modo desarrollo
-npm run dev
-```
-
-### 4. Producción
-Para desplegar la aplicación en producción (Ej: Vercel para React y Render/VPS para FastAPI):
-1. **Frontend:** Ejecuta `npm run build` en la carpeta `frontend`. Cambia el constante `API` en `App.tsx` para que apunte a la URL de producción de tu servidor backend.
-2. **Backend:** Configura un proxy inverso con NGINX para que apunte al servicio uvicorn que estará corriendo internamente.
-3. El archivo SQLite y las imágenes dentro de `backend/uploads` deberán persistir de alguna manera en el servidor (Ej: Volúmenes persistentes en Docker).
-
----
-
-## 🔒 Contribuciones y Seguridad
-Este proyecto fue diseñado con la seguridad en mente. Todos los archivos generados en tiempo de ejecución (cachés de Python, dependencias de Node, base de datos SQLite y carpetas de subida de imágenes) están listados en el `.gitignore` por defecto. 
-
-**NO ALMACENES INFORMACIÓN CONFIDENCIAL O CREDENCIALES EN EL REPOSITORIO.** Utiliza siempre el archivo `.env`.
-
----
-
-*Desarrollado y pulido para ser la máxima expresión de estética "Dark AMOLED" en una aplicación de gestión interna.*
+*Desarrollado y pulido para ser la máxima expresión de estética en una aplicación de gestión interna.*
