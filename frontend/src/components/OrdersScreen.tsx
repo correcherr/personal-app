@@ -41,6 +41,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
   // Delete confirm states
   const [deleteOrderTarget, setDeleteOrderTarget] = useState<number | null>(null)
   const [deleteItemTarget, setDeleteItemTarget] = useState<number | null>(null)
+  const [animatingDeleteId, setAnimatingDeleteId] = useState<number | null>(null)
 
   useEffect(() => {
     if (!isDesktop) {
@@ -226,7 +227,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
         <input 
           type="text" value={val} onChange={(e) => setVal(e.target.value)}
-          onBlur={() => handleUpdateUnitSalePrice(sale.id, val, orderId)}
+          onBlur={() => handleUpdateUnitSalePrice(sale.id, val)}
           style={{
             flex: 1, padding: "10px 14px", borderRadius: "10px", border: `1px solid ${currentPrice != null ? "var(--success)" : "rgba(255,255,255,0.08)"}`,
             background: "#1A1A1A", color: currentPrice != null ? "var(--success)" : "var(--text-1)", fontSize: "1rem", outline: "none"
@@ -290,7 +291,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
       {item.sales.map((sale: any) => (
         <div key={sale.id} className="unit-sale-row">
           <div className="status-dot" style={{ background: sale.sell_price !== null ? "var(--success)" : "rgba(255,255,255,0.2)" }} />
-          <UnitSaleInput sale={sale} buyPrice={item.buy_price} orderId={_orderId} />
+          <UnitSaleInput sale={sale} buyPrice={item.buy_price} />
         </div>
       ))}
     </div>
@@ -333,7 +334,7 @@ export function OrdersScreen({ onProfitChange }: { onProfitChange: (profit: numb
                     <div className="badges-row">
                       {renderPriceBadge("Compra", item.buy_price * item.quantity, "red")}
                       {renderPriceBadge("Rec.", (item.article?.recommended_price || 0) * item.quantity, "yellow")}
-                      {item.quantity === 1 ? <UnitSaleInput sale={item.sales[0]} buyPrice={item.buy_price} orderId={order.id} /> : renderPriceBadge("Venta", totalRevenue, "green")}
+                      {item.quantity === 1 ? <UnitSaleInput sale={item.sales[0]} buyPrice={item.buy_price} /> : renderPriceBadge("Venta", totalRevenue, "green")}
                     </div>
                     {item.quantity > 1 && renderProfitBadge(itemProfit)}
                     {item.quantity > 1 && <div className={`expand-icon ${isExpanded ? 'up' : ''}`}>↓</div>}

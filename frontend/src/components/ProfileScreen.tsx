@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useAuth, useTranslation } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { API, authFetch } from '../utils/helpers';
 import { useDevice } from '../hooks/useMediaQuery';
 import { ConfirmModal } from './ConfirmModal';
@@ -39,7 +39,7 @@ export function ProfileScreen() {
           authFetch(`${API}/api/users/me/stats`),
           fetch(`${API}/api/app/version`)
         ]);
-        if (statsRes.ok) setStats(await statsRes.json());
+        if (statsRes.ok) _setStats(await statsRes.json());
         if (verRes.ok) {
           const v = await verRes.json();
           setVersion(v.version);
